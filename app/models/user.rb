@@ -1,8 +1,8 @@
 class User < ApplicationRecord
+  has_many :microposts, dependent: :destroy
   attr_accessor :remember_token, :activation_token, :reset_token
 
   before_create :create_activation_digest
-
   before_save :downcase_email
 
   # Validate Name
@@ -81,6 +81,10 @@ class User < ApplicationRecord
     def new_token
       SecureRandom.urlsafe_base64
     end
+  end
+
+  def feed
+    Micropost.where("user_id = ?", id).sort_create_at
   end
 
   private

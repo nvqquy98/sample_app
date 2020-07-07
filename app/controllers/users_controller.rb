@@ -5,8 +5,6 @@ class UsersController < ApplicationController
   before_action :correct_user, only: %i(edit update)
   before_action :admin_user, only: :destroy
 
-  # CRUD User
-
   # Show All Users
   def index
     @users = User.paginate page: params[:page]
@@ -25,9 +23,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       # Handle a successful save.
-      log_in @user
-      flash[:success] = "Welcome to the Sample App!"
-      redirect_back_or @user
+      @user.send_activation_email
+      flash[:info] = t "controller.users.create.flash_check_email"
+      redirect_to root_path
     else
       render :new
     end
@@ -39,10 +37,11 @@ class UsersController < ApplicationController
   # Post Update User
   def update
     if @user.update(user_params)
-      flash[:success] = "User was successfully updated"
+      flash[:success] = t "controller.users.update.flash_success"
       redirect_to @user
     else
-      flash[:danger] = "Something went wrong"
+      flash[:danger] = t "controller.users.update.flash_fail"
+
       render :edit
     end
   end
@@ -50,14 +49,15 @@ class UsersController < ApplicationController
   # Delete User
   def destroy
     if @user.destroy
-      flash[:success] = "User deleted"
+      flash[:success] = t "controller.users.destroy.flash_success"
+
     else
-      flash[:danger] = "User don't not find"
+      flash[:danger] = t "controller.users.destroy.flash_fail"
+
     end
     redirect_to users_url
   end
 
-  # private method
   private
 
   def user_params
@@ -65,16 +65,12 @@ class UsersController < ApplicationController
                                  :password, :password_confirmation)
   end
 
-  # Before Method Start
-
-  # Start Before_Action Medthod
-
   # Confirms a logged-in user.
   def logged_in_user
     return if logged_in?
 
     store_location
-    flash[:danger] = "Please login"
+    flash[:danger] = t "controller.users.logged_in_user.flash_please_login"
     redirect_to login_path
   end
 
@@ -93,7 +89,7 @@ class UsersController < ApplicationController
     @user = User.find_by id: params[:id]
     return if @user
 
-    flash[:danger] = "User don't exists"
+    flash[:danger] = t "controller.users.load_user.flash_user_nil"
     redirect_to root_path
   end
 end

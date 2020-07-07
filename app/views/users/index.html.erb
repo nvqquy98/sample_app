@@ -1,5 +1,5 @@
-<% provide(:title, 'All users') %>
-<h1>All users</h1>
+<% provide:title,t("view.users.index.title") %>
+<h1><%=t("view.users.index.title")%></h1>
 <%= will_paginate %>
 <ul class="users">
   <%= render @users %>

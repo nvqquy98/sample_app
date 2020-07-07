@@ -1,9 +1,8 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token
 
-  # Before Method
+  before_create :create_activation_digest
 
-  # Before_save
   before_save :downcase_email
 
   # Validate Name
@@ -24,8 +23,6 @@ class User < ApplicationRecord
             allow_nil: true
   has_secure_password
 
-  # public method
-
   # create  token and save  database in column remember_digest
   def remember
     remember_token = User.new_token
@@ -38,10 +35,49 @@ class User < ApplicationRecord
   end
 
   # Returns true if the given token matches the digest.
-  def authenticated? remember_token
-    return false unless remember_digest
+  def authenticated? attribute, remember_token
+    digest = send("#{attribute}_digest")
+    return false unless digest
 
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    BCrypt::Password.new(digest).is_password?(remember_token)
+  end
+
+  # Activates an account.
+  def activate
+    update(activated: true)
+    update(activated_at: Time.zone.now)
+  end
+
+  # Sends activation email.
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+  class << self
+    # return the hash digest of the given string
+    def digest string
+      cost = BCrypt::Engine::MIN_COST if ActiveModel::SecurePassword.min_cost
+      cost = BCrypt::Engine.cost unless ActiveModel::SecurePassword.min_cost
+      BCrypt::Password.create(string, cost: cost)
+    end
+
+    # create new token
+    def new_token
+      SecureRandom.urlsafe_base64
+    end
+  end
+
+  private
+
+  # Create token activated email
+  def create_activation_digest
+    self.activation_token = User.new_token
+    self.activation_digest = User.digest(activation_token)
+  end
+
+  # Save email user lowercase letter
+  def downcase_email
+    email.downcase!
   end
 
   # Class Method

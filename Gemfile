@@ -3,6 +3,8 @@ git_source(:github){|repo| "https://github.com/#{repo}.git"}
 
 ruby "2.7.1"
 
+# Gem Config for project
+gem "config"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails"
 gem "rails", "~> 6.0.3", ">= 6.0.3.2"
 # Use mysql as the database for Active Record
@@ -28,6 +30,9 @@ gem "bootstrap-sass", "3.4.1"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.2", require: false
 
+gem "faker", "~> 1.6", ">= 1.6.6"
+gem "will_paginate", "~> 3.3"
+gem "will_paginate-bootstrap", "~> 1.0", ">= 1.0.2"
 group :development, :test do
   # Call "byebug" anywhere in the code to stop
   # execution and get a debugger console

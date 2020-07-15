@@ -1,11 +1,18 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+$white: #fff;
+$gray_medium: #bbb;
+$gray-lighter: #d3d3d3;
+$red: #ee0e00;
+$state-danger-text: #f32013;
+
 @mixin box_sizing {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 /* miscellaneous */
 .debug_dump {
   clear: both;
@@ -18,7 +25,6 @@
 //Staticpage
 /* universal */
 body {
-
   padding-top: 60px;
 }
 section {
@@ -38,14 +44,14 @@ textarea {
   float: left;
   margin-right: 10px;
   font-size: 1.7em;
-  color: #fff;
+  color: $white;
   text-transform: uppercase;
   letter-spacing: -1px;
   padding-top: 9px;
   font-weight: bold;
 }
 #logo:hover {
-  color: #fff;
+  color: $white;
   text-decoration: none;
 }
 
@@ -89,7 +95,7 @@ input,
 textarea,
 select,
 .uneditable-input {
-  border: 1px solid #bbb;
+  border: 1px solid $gray_medium;
   width: 100%;
   margin-bottom: 15px;
   @include box_sizing;
@@ -100,9 +106,9 @@ input {
 /* forms */
 
 #error_explanation {
-  color: red;
+  color: $red;
   ul {
-    color: red;
+    color: $red;
     margin: 0 0 30px 0;
   }
 }
@@ -134,15 +140,15 @@ input {
     border-bottom: 1px solid $gray-lighter;
   }
 }
-.checkbox{
-    margin-top: -10px;
-    margin-bottom: 10px;
-    span {
-        margin-left: 20px;
-        font-weight: normal;
-    }
+.checkbox {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  span {
+    margin-left: 20px;
+    font-weight: normal;
+  }
 }
 #session_remember_me {
-width: auto;
-margin-left: 0;
+  width: auto;
+  margin-left: 0;
 }

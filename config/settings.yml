@@ -8,3 +8,6 @@ user:
   password:
     min_length: 6
     max_length: 50
+micropost:
+  content:
+    max_length: 140

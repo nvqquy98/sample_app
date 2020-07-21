@@ -11,7 +11,9 @@ class UsersController < ApplicationController
   end
 
   # Show User
-  def show; end
+  def show
+    @microposts = @user.microposts.paginate(page: params[:page])
+  end
 
   # Get Singup User
   def new
@@ -63,15 +65,6 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email,
                                  :password, :password_confirmation)
-  end
-
-  # Confirms a logged-in user.
-  def logged_in_user
-    return if logged_in?
-
-    store_location
-    flash[:danger] = t "controller.users.logged_in_user.flash_please_login"
-    redirect_to login_path
   end
 
   # Confirms the correct user.

@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token, :activation_token
+  attr_accessor :remember_token, :activation_token, :reset_token
 
   before_create :create_activation_digest
 
@@ -53,6 +53,22 @@ class User < ApplicationRecord
     UserMailer.account_activation(self).deliver_now
   end
 
+  # Create token and save databse attribute reset_digest
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_columns(reset_digest: User.digest(reset_token),
+                   reset_send_at: Time.zone.now)
+  end
+
+  # use UserMailer chapter11 send email now
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  # check time after sendMail
+  def password_reset_expired?
+    reset_send_at > 2.hours.ago
+  end
   class << self
     # return the hash digest of the given string
     def digest string
@@ -68,39 +84,15 @@ class User < ApplicationRecord
   end
 
   private
-
-  # Create token activated email
-  def create_activation_digest
-    self.activation_token = User.new_token
-    self.activation_digest = User.digest(activation_token)
-  end
 
   # Save email user lowercase letter
   def downcase_email
     email.downcase!
   end
 
-  # Class Method
-
-  class << self
-    # return the hash digest of the given string
-    def digest string
-      cost = BCrypt::Engine::MIN_COST if ActiveModel::SecurePassword.min_cost
-      cost = BCrypt::Engine.cost unless ActiveModel::SecurePassword.min_cost
-      BCrypt::Password.create(string, cost: cost)
-    end
-
-    # create new token
-    def new_token
-      SecureRandom.urlsafe_base64
-    end
-  end
-
-  # Private method
-
-  private
-  # save email user lowercase letter
-  def downcase_email
-    email.downcase!
+  # Create token activated email
+  def create_activation_digest
+    self.activation_token = User.new_token
+    self.activation_digest = User.digest(activation_token)
   end
 end

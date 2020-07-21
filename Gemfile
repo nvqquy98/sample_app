@@ -41,6 +41,7 @@ group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "rubocop", "~> 0.74.0", require: false
   gem "rubocop-rails", "~> 2.3.2", require: false
+  gem "solargraph"
 end
 group :development do
   # Access an interactive console on exception pages

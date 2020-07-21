@@ -36,6 +36,14 @@ en:
         valid: "incorrect"
       check_expiration:
         flash_danger: "Password reset has expried !"
+    microposts:
+      create:
+        flash_success: " Micropost created!"
+      destroy:
+        flash_success: " Micropost deleted"
+        flash_fail: "Micopost deleted faild"
+      correct_user:
+        flash_fail: "Micropost don't not find"
   view:
     session:
       new:
